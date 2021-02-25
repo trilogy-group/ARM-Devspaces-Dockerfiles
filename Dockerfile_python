@@ -1,0 +1,22 @@
+FROM python:3.7.5-slim
+
+# Installing basic requirements
+RUN apt-get update \
+    && apt-get install gcc curl git nginx rerun build-essential software-properties-common -y \
+    && apt-get clean -y
+RUN pip install --upgrade pip
+RUN pip install Django==3.0
+
+# Cleaning up
+RUN rm -rf /var/lib/apt/lists/*
+
+# Installing AWS CLI
+RUN curl -O 'https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip'
+RUN unzip awscli-exe-linux-aarch64.zip
+RUN ./aws/install
+
+ENV PYTHONUNBUFFERED=0
+EXPOSE 8000
+CMD tail -f /dev/null
+#CMD ["gunicorn", "<app_name>.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
+#CMD ["gunicorn", "--config", "gunicorn-cfg.py", "<app_name>.wsgi"]

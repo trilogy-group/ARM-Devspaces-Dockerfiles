@@ -1,0 +1,29 @@
+FROM ubuntu:16.04
+
+ENV JAVA_HOME=/opt/java \
+    GRADLE_VERSION=4.10.3 \
+    GRADLE_HOME=/opt/gradle
+ENV PATH=${GRADLE_HOME}/bin:/opt/java/bin:${PATH}
+
+# Install essential tools on Ubuntu
+RUN apt-get update -y && \
+    apt-get install -y curl git mc net-tools openssh-server software-properties-common sudo tar unzip vim wget zip
+
+# Install OpenJDK jdk 8
+RUN wget https://github.com/ojdkbuild/contrib_jdk8u-ci/releases/download/jdk8u222-b10/jdk-8u222-ojdkbuild-linux-x64.zip && \
+    unzip jdk-*.zip -d /opt && \
+    ln -s /opt/jdk-8u222-ojdkbuild-linux-x64 ${JAVA_HOME} && \
+    rm -rf jdk-8u222-ojdkbuild-linux-x64.tar.gz
+
+# Install Gradle
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip -d /opt gradle-*-bin.zip && \
+    ln -s /opt/gradle-${GRADLE_VERSION} ${GRADLE_HOME} && \
+    rm -rf gradle-*-bin.zip
+
+# Clean APT
+RUN apt-get clean all
+
+WORKDIR /data
+
+CMD tail -f /dev/null

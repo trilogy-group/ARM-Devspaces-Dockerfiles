@@ -1,0 +1,18 @@
+FROM node:lts-stretch
+RUN apt-get update
+ENV PATH="./node_modules/.bin:$PATH"
+
+WORKDIR /code
+COPY . /code
+RUN npm install --save
+
+# REACT JS
+#EXPOSE 3000
+#CMD ["npm", "start"]
+
+# ANGULAR JS
+#RUN npm install -g @angular/cli@7.3.9
+#EXPOSE 4200
+#CMD ng serve --host 0.0.0.0
+
+CMD ls
